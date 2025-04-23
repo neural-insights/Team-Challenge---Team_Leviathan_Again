@@ -40,7 +40,7 @@ async def root():
             "/": "Esta página de inicio que muestra información de la API",
             "/predict": "Endpoint para predecir el precio de un coche (POST)",
             "/docs": "Documentación automática de la API"
-            # El tercer endpoint estará comentado y se habilitará durante la presentación
+
         },
         "ejemplo_predict": {
             "Brand": "Toyota",
@@ -82,14 +82,25 @@ async def predict_price(car: CarFeatures):
         raise HTTPException(
             status_code=500, detail=f"Error en la predicción: {str(e)}")
 
-# Tercer endpoint (comentado) - Se habilitará durante la presentación
-# @app.get("/health")
-# async def health_check():
+
+# @app.post("/compare")
+# async def compare_cars(car1: CarFeatures, car2: CarFeatures):
+#     """Compara los precios de dos coches."""
+#     car1_df = pd.DataFrame([car1.dict()])
+#     car2_df = pd.DataFrame([car2.dict()])
+
+#     price1 = float(model.predict(car1_df)[0])
+#     price2 = float(model.predict(car2_df)[0])
+
 #     return {
-#         "status": "OK",
-#         "model_loaded": model is not None,
-#         "message": "La API está funcionando correctamente"
+#         "coche1": car1.dict(),
+#         "precio1": price1,
+#         "coche2": car2.dict(),
+#         "precio2": price2,
+#         "diferencia": abs(price1 - price2),
+#         "mas_caro": "Coche 1" if price1 > price2 else "Coche 2"
 #     }
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

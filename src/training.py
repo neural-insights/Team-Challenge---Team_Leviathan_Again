@@ -37,4 +37,4 @@ def train_and_save_model(data_path: str, output_model_path: str):
     print(f"✅ Modelo guardado en {output_model_path}")
 
 if __name__ == "__main__":
-    train_and_save_model("../data/car_price_dataset.csv", "../models/modelo_coche.pkl")
+    train_and_save_model("./data/car_price_dataset.csv", "./models/modelo_coche.pkl")

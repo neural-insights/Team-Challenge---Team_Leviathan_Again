@@ -37,8 +37,8 @@ Se recomienda crear un **entorno virtual** antes de instalar las dependencias:
 
 ```bash
 python -m venv venv
-source venv/bin/activate     # En Mac/Linux
-venv\Scripts\activate        # En Windows
+source venv/bin/activate      # En Mac/Linux
+source venv/Scripts/activate  # En Windows
 ```
 
 Instala las dependencias con:
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 ### 1. Entrenar el modelo (opcional si ya existe `models/modelo_coche.pkl`):
 
 ```bash
-cd src && python training.py && cd ..
+python src/training.py
 ```
 
 Esto entrenará el modelo usando los datos en `data/car_price_dataset.csv` y lo guardará en `models/modelo_coche.pkl`.

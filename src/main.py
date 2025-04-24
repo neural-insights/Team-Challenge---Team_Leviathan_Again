@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
 
-from model_utils import load_model, predict_price
+from src.model_utils import load_model, predict_price
 
 app = FastAPI(title="API de Predicción de Precios de Coches")
 

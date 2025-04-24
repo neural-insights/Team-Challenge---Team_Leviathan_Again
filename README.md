@@ -54,7 +54,7 @@ pip install -r requirements.txt
 ### 1. Entrenar el modelo (opcional si ya existe `models/modelo_coche.pkl`):
 
 ```bash
-python src/training.py
+cd src && python training.py && cd ..
 ```
 
 Esto entrenará el modelo usando los datos en `data/car_price_dataset.csv` y lo guardará en `models/modelo_coche.pkl`.

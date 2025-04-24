@@ -1,23 +1,20 @@
-import pandas as pd
 import pickle
+import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
 
-# Crear la aplicación FastAPI
 app = FastAPI(title="API de Predicción de Precios de Coches")
 
-# Cargar el modelo guardado
+# Cargar el modelo
 try:
     with open('modelo_coche.pkl', 'rb') as file:
         model = pickle.load(file)
 except FileNotFoundError:
     model = None
-    print("¡ADVERTENCIA! Modelo no encontrado. La API no funcionará correctamente.")
+    print("⚠️ ¡ADVERTENCIA! Modelo no encontrado. La API no funcionará correctamente.")
 
-# Definir la estructura de datos de entrada
-
-
+# Modelo de entrada
 class CarFeatures(BaseModel):
     Brand: str
     Model: str
@@ -29,18 +26,14 @@ class CarFeatures(BaseModel):
     Doors: int
     Owner_Count: int
 
-# Endpoint raíz - Página de inicio
-
-
 @app.get("/")
 async def root():
     return {
         "mensaje": "¡Bienvenido a la API de predicción de precios de coches!",
         "endpoints": {
-            "/": "Esta página de inicio que muestra información de la API",
-            "/predict": "Endpoint para predecir el precio de un coche (POST)",
-            "/docs": "Documentación automática de la API"
-
+            "/": "Página de inicio con información general",
+            "/predict": "Endpoint POST para predecir el precio de un coche",
+            "/docs": "Documentación interactiva automática"
         },
         "ejemplo_predict": {
             "Brand": "Toyota",
@@ -55,52 +48,23 @@ async def root():
         }
     }
 
-# Endpoint de predicción
-
-
 @app.post("/predict")
 async def predict_price(car: CarFeatures):
     if model is None:
-        raise HTTPException(
-            status_code=500, detail="Modelo no cargado correctamente")
+        raise HTTPException(status_code=500, detail="Modelo no cargado correctamente")
 
-    # Convertir los datos de entrada en un DataFrame
-    car_df = pd.DataFrame([car.dict()])
-
-    # Hacer la predicción
+    car_data = car.model_dump()
+    car_df = pd.DataFrame([car_data])
     try:
         prediction = model.predict(car_df)
-        # Redondear a 2 decimales y convertir a valor flotante
-        price = float(round(prediction[0], 2))
-
+        price = round(float(prediction[0]), 2)
         return {
-            "coche": car.dict(),
+            "coche": car_data,
             "precio_predicho": price,
             "mensaje": f"El precio estimado del coche es: {price} euros"
         }
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Error en la predicción: {str(e)}")
-
-
-# @app.post("/compare")
-# async def compare_cars(car1: CarFeatures, car2: CarFeatures):
-#     """Compara los precios de dos coches."""
-#     car1_df = pd.DataFrame([car1.dict()])
-#     car2_df = pd.DataFrame([car2.dict()])
-
-#     price1 = float(model.predict(car1_df)[0])
-#     price2 = float(model.predict(car2_df)[0])
-
-#     return {
-#         "coche1": car1.dict(),
-#         "precio1": price1,
-#         "coche2": car2.dict(),
-#         "precio2": price2,
-#         "diferencia": abs(price1 - price2),
-#         "mas_caro": "Coche 1" if price1 > price2 else "Coche 2"
-#     }
-
+        raise HTTPException(status_code=500, detail=f"Error en la predicción: {str(e)}")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

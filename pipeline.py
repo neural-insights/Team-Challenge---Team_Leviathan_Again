@@ -8,14 +8,10 @@ from sklearn.pipeline import Pipeline
 import pickle
 
 # Cargar los datos
-df = pd.read_csv(
-    r'C:\BOOTCAMP_DATA_SCIENCE\Team Challenge\Team Challenge - Despliegue de Modelo en Producción\car_price_dataset.csv')
-
+df = pd.read_csv('./car_price_dataset.csv')
 
 # Dividir features y target
-
 X = df.drop('Price', axis=1)
-
 y = df['Price']
 
 # Identificar columnas categóricas y numéricas
@@ -36,8 +32,7 @@ model_pipeline = Pipeline(steps=[
 ])
 
 # Dividir en train y test
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Entrenar el modelo
 model_pipeline.fit(X_train, y_train)
